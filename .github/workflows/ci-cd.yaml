@@ -45,7 +45,7 @@ jobs:
   psuh-to-ecr:
     name: Push Image to ECR
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/head/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout Repository
