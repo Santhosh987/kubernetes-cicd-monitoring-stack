@@ -1,0 +1,20 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: monitoring-website
+spec:
+  replicas: {{ .Values.replicaCount }} 
+  selector:
+    matchLabels:
+      app: monitoring-website
+  template:
+    metadata:
+      labels:
+        app: monitoring-website
+    spec:
+      containers:
+        - name: nginx
+          image: "{{ .Values.image.repository}}:{{ .Values.image.tag}}"
+          imagePullPolicy: {{ .Values.image.pullPolicy}}
+          ports:
+            - containerPort: {{ .Values.image.containerPort}}

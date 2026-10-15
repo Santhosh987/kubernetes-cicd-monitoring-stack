@@ -1,0 +1,22 @@
+# Secrets and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials
+.aws/
+
+# Terraform state and local files
+*.tfstate
+*.tfstate.*
+.terraform/
+
+# Logs and temporary files
+*.log
+tmp/
+temp/
+
+# Operating system files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,14 @@
+replicaCount: 2
+
+image:
+  repository: 937792903959.dkr.ecr.ap-south-1.amazonaws.com/devops-monitoring-website
+  tag: "v1"
+  pullPolicy: IfNotPresent
+
+  containerPort: 80
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 80
+  protocol: TCP
