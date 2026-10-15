@@ -1,4 +1,5 @@
-name : Kubernetes CI-CD Monitoring Stack
+
+name: Kubernetes CI-CD Monitoring Stack
 
 on:
   push:
@@ -19,17 +20,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Install Helm
         uses: azure/setup-helm@v4
 
       - name: Lint Helm Chart
-        run:  helm lint ./website-chart
+        run: helm lint ./website-chart
 
       - name: Validate Kubernetes Manifests
-        run:  helm template monitoring-website ./website-chart
+        run: helm template monitoring-website ./website-chart
 
   docker-build:
     name: Build Docker Image
@@ -40,13 +41,13 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build Docker Image
-        run:  docker build -t devops-monitoring-website:test .
+        run: docker build -t devops-monitoring-website:test .
 
-  psuh-to-ecr:
+  push-to-ecr:
     name: Push Image to ECR
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
- 
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -54,20 +55,19 @@ jobs:
       - name: Configure AWS Credentials Using OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::937792903959:role/github-actions-monitoring-ecr-role
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN}}
           aws-region: ap-south-1
 
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
-        
-      - name: Build and push Docker Image
+
+      - name: Build and Push Docker Image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: devops-monitoring-website
           IMAGE_TAG: ${{ github.sha }}
-
-        run:
+        run: |
           docker build \
             -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
             -t $ECR_REGISTRY/$ECR_REPOSITORY:latest \
