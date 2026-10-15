@@ -29,3 +29,14 @@ jobs:
 
       - name: Validate Kubernetes Manifests
         run:  helm template monitoring-website ./website-chart
+
+  docker-build:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker Image
+        run:  docker build -t devops-monitoring-website:test .
