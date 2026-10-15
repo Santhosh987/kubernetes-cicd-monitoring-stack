@@ -1,0 +1,31 @@
+name : Kubernetes CI-CD Monitoring Stack
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-helm:
+    name: Validate Helm Chart
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+
+      - name: Lint Helm Chart
+        run:  helm lint ./website-chart
+
+      - name: Validate Kubernetes Manifests
+        run:  helm template monitoring-website ./website-chart
