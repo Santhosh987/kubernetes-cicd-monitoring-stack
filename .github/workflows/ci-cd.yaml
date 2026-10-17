@@ -75,3 +75,44 @@ jobs:
 
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+
+  deploy-to-eks:
+    name: Deploy to Amazon EKS
+    runs-on: ubuntu-latest
+    needs: push-to-ecr
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials Using OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ap-south-1
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v4
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+
+      - name: Configure EKS Access
+        run: |
+          aws eks update-kubeconfig \
+            --name sancluster \
+            --region ap-south-1
+        
+      - name: Deploy Website Using Helm
+        run: |
+          helm upgrade --install monitoring-website ./website-chart \
+            --set image.tag=${{ github.sha }}
+
+      - name: Verify Deployment
+        run: |
+          kubectl rollout status deployment/monitoring-website \
+            --timeout=180s
+          kubectl get pods,services
+      
+      
