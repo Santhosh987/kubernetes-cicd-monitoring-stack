@@ -1,0 +1,17 @@
+
+grafana:
+  grafana.ini:
+    server:
+      domain: "*"
+      root_url: "%(protocol)s://%(domain)s/grafana/"
+      serve_from_sub_path: true
+  service:
+    type: ClusterIP
+
+prometheus:
+  service:
+    type: ClusterIP
+
+alertmanager:
+  service:
+    type: ClusterIP
