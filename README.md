@@ -1,4 +1,4 @@
-# Kubernetes CI/CD and Monitoring Stack using GitHub Actions, Docker, Amazon ECR & Amazon EKS
+# 🚀 Kubernetes CI/CD and Monitoring Stack using GitHub Actions, Docker, Amazon ECR & Amazon EKS
 
 A hands-on DevOps project where I built a CI/CD pipeline using GitHub Actions, Docker, Amazon ECR, and Amazon EKS, along with Prometheus and Grafana for Kubernetes monitoring.
 
